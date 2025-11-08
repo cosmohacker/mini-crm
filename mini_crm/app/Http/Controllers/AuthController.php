@@ -6,13 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
+use App\Constants\Messages;
+
 class AuthController extends Controller
 {
     // Login Form
     public function auth()
     {
         if (Auth::check()) {
-            return redirect()->route('users.index');
+            if (Auth::user()->hasRole('admin')) {
+                return redirect()->route('users.index');
+            }
+            return redirect()->route('tickets.index');
         }
 
         return view('auth.login');
@@ -28,11 +33,15 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('users.index'));
+            
+            if (Auth::user()->hasRole('admin')) {
+                return redirect()->intended(route('users.index'));
+            }
+            return redirect()->intended(route('tickets.index'));
         }
 
         throw ValidationException::withMessages([
-            'email' => ['The provided credentials do not match our records.'],
+            'email' => [Messages::AUTH_CREDENTIALS_DO_NOT_MATCH],
         ]);
     }
 

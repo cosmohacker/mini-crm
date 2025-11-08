@@ -10,12 +10,14 @@
             <li class="text-xs font-bold pb-[5px]">
                 <span class="text-xs text-gray-400 font-semibold">MENU</span>
             </li>
+            @role('admin')
             <li class="sidebar-item">
                 <a class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center relative rounded-md text-gray-500 w-full {{ request()->routeIs('home') || request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
                     <i class="ti ti-users ps-2 text-2xl"></i>
                     <span>Users</span>
                 </a>
             </li>
+            @endrole
             <li class="sidebar-item">
                 <a class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center relative rounded-md text-gray-500 w-full {{ request()->routeIs('customers.*') ? 'active' : '' }}" href="{{ route('customers.index') }}">
                     <i class="ti ti-user-circle ps-2 text-2xl"></i>

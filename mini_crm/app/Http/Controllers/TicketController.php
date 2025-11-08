@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\UpdateTicketStatusRequest;
 use App\Services\TicketService;
+use App\Constants\Messages;
 
 class TicketController extends Controller
 {
@@ -32,6 +33,11 @@ class TicketController extends Controller
 
     public function updateStatus($id, UpdateTicketStatusRequest $request)
     {
+        // Only managers can update ticket status
+        if (!auth()->user()->hasRole('manager')) {
+            return redirect()->route('tickets.details', $id)->with('error', Messages::TICKET_STATUS_UPDATE_FORBIDDEN);
+        }
+
         $ticket = $this->ticketService->findById($id);
 
         if (!$ticket) {
@@ -40,6 +46,6 @@ class TicketController extends Controller
 
         $this->ticketService->updateStatus($ticket, $request->validated()['status']);
 
-        return redirect()->route('tickets.details', $id)->with('success', 'Ticket status updated successfully.');
+        return redirect()->route('tickets.details', $id)->with('success', Messages::TICKET_STATUS_UPDATED_SUCCESSFULLY);
     }
 }

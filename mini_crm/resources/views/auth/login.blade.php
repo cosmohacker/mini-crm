@@ -57,7 +57,7 @@
                 <div class="w-full card-body">
                     <h2 class="text-3xl mb-4 text-gray-400 text-center">Widgets</h2>
                     <div class="grid my-5">
-                        <a href="{{ route('widgets.index') }}" class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700 text-center">
+                        <a href="{{ route('widget') }}" class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700 text-center">
                             Redirect to Widget
                         </a>
                     </div>

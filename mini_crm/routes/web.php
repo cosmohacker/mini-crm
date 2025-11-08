@@ -15,7 +15,6 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Widgets
-Route::get('/widgets', [WidgetController::class, 'index'])->name('widgets.index');
 Route::get('/widget', [WidgetController::class, 'index'])->name('widget');
 
 // Protected routes
@@ -34,5 +33,5 @@ Route::middleware(['auth', 'role:manager|admin'])->group(function () {
 
     // File Management
     Route::get('/files', [FileController::class, 'index'])->name('files.index');
-    Route::get('/file/{id}', [FileController::class, 'details'])->name('files.details');
+    Route::get('/file/{id}', [FileController::class, 'details'])->name('file.details');
 });

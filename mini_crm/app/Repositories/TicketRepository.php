@@ -2,10 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\Ticket;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Builder;
+
+use App\Models\Ticket;
 
 class TicketRepository
 {

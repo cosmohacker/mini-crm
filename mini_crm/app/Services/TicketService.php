@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Ticket;
-use App\Repositories\TicketRepository;
 use Illuminate\Http\UploadedFile;
+
+use App\Repositories\TicketRepository;
+use App\Models\Ticket;
 
 class TicketService
 {
@@ -17,10 +18,8 @@ class TicketService
     {
         return $this->ticketRepository->findById($id);
     }
-
-    /**
-     * Create a new ticket with optional image.
-     */
+    
+    //Create a new ticket with optional image.
     public function create(array $data, ?UploadedFile $image = null)
     {
         $ticket = $this->ticketRepository->create($data);

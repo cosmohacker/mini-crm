@@ -35,7 +35,7 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center relative rounded-md text-gray-500 w-full {{ request()->routeIs('widgets.*') ? 'active' : '' }}" href="{{ route('widgets.index') }}" target="_blank">
+                <a class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center relative rounded-md text-gray-500 w-full {{ request()->routeIs('widget') ? 'active' : '' }}" href="{{ route('widget') }}" target="_blank">
                     <i class="ti ti-layout-grid ps-2 text-2xl"></i>
                     <span>Widget</span>
                 </a>

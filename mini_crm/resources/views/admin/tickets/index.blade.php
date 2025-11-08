@@ -7,6 +7,84 @@
         <h1 class="text-2xl font-semibold text-gray-500">Tickets</h1>
     </header>
 
+    <!-- Ticket Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- Today Statistics -->
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-gray-500 text-lg font-semibold mb-4">Today's Tickets</h4>
+                <div id="today-stats" class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">Total:</span>
+                        <span class="font-semibold text-gray-700" id="today-total">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">New:</span>
+                        <span class="font-semibold text-blue-600" id="today-new">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">In Progress:</span>
+                        <span class="font-semibold text-yellow-600" id="today-in-progress">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">Processed:</span>
+                        <span class="font-semibold text-green-600" id="today-processed">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- This Week Statistics -->
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-gray-500 text-lg font-semibold mb-4">This Week's Tickets</h4>
+                <div id="week-stats" class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">Total:</span>
+                        <span class="font-semibold text-gray-700" id="week-total">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">New:</span>
+                        <span class="font-semibold text-blue-600" id="week-new">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">In Progress:</span>
+                        <span class="font-semibold text-yellow-600" id="week-in-progress">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">Processed:</span>
+                        <span class="font-semibold text-green-600" id="week-processed">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- This Month Statistics -->
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-gray-500 text-lg font-semibold mb-4">This Month's Tickets</h4>
+                <div id="month-stats" class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">Total:</span>
+                        <span class="font-semibold text-gray-700" id="month-total">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">New:</span>
+                        <span class="font-semibold text-blue-600" id="month-new">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">In Progress:</span>
+                        <span class="font-semibold text-yellow-600" id="month-in-progress">-</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">Processed:</span>
+                        <span class="font-semibold text-green-600" id="month-processed">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body">
             <div class="flex justify-between items-center mb-5">
@@ -118,6 +196,34 @@
     @push('scripts')
     <script>
         $(document).ready(function() {
+            // Load ticket statistics
+            fetch('/api/tickets/statistics')
+                .then(response => response.json())
+                .then(data => {
+                    const stats = data.data || data;
+                    
+                    // Today's statistics
+                    $('#today-total').text(stats.day?.total || 0);
+                    $('#today-new').text(stats.day?.new || 0);
+                    $('#today-in-progress').text(stats.day?.in_progress || 0);
+                    $('#today-processed').text(stats.day?.processed || 0);
+                    
+                    // This week's statistics
+                    $('#week-total').text(stats.week?.total || 0);
+                    $('#week-new').text(stats.week?.new || 0);
+                    $('#week-in-progress').text(stats.week?.in_progress || 0);
+                    $('#week-processed').text(stats.week?.processed || 0);
+                    
+                    // This month's statistics
+                    $('#month-total').text(stats.month?.total || 0);
+                    $('#month-new').text(stats.month?.new || 0);
+                    $('#month-in-progress').text(stats.month?.in_progress || 0);
+                    $('#month-processed').text(stats.month?.processed || 0);
+                })
+                .catch(error => {
+                    console.error('Error loading statistics:', error);
+                });
+
             // Destroy existing DataTable if it exists
             if ($.fn.DataTable.isDataTable('#ticketsTable')) {
                 $('#ticketsTable').DataTable().destroy();

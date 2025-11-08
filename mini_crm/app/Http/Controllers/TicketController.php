@@ -9,7 +9,6 @@ use App\Services\TicketService;
 
 class TicketController extends Controller
 {
-
     public function __construct(private TicketService $ticketService) {}
 
     public function index(Request $request)
@@ -28,7 +27,7 @@ class TicketController extends Controller
             abort(404);
         }
 
-        return view('admin.tickets.details', compact('id'));
+        return view('admin.tickets.details', compact('ticket'));
     }
 
     public function updateStatus($id, UpdateTicketStatusRequest $request)
@@ -41,6 +40,6 @@ class TicketController extends Controller
 
         $this->ticketService->updateStatus($ticket, $request->validated()['status']);
 
-        return redirect()->route('tickets.show', $id)->with('success', 'Ticket status updated successfully.');
+        return redirect()->route('tickets.details', $id)->with('success', 'Ticket status updated successfully.');
     }
 }

@@ -23,7 +23,8 @@ class FileController extends Controller
                     return [
                         'file_name'      => $media->file_name,
                         'created_at'     => $media->created_at,
-                        'url'            => route('media.show', $media->id),
+                        'url'            => route('file.details', $media->id),
+                        'ticket_id'      => $ticket->id,
                         'ticket_subject' => $ticket->subject,
                         'customer_name'  => $ticket->customer->name ?? 'N/A',
                         'is_image'       => str_starts_with($mimeType, 'image/'),

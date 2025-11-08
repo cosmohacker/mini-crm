@@ -126,7 +126,7 @@
             // Initialize DataTable
             $('#ticketsTable').DataTable({
                 order: [[6, 'desc']],
-                pageLength: 15,
+                pageLength: 10,
                 responsive: true,
                 language: {
                     search: "Search:",

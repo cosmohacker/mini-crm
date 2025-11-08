@@ -51,7 +51,7 @@
                             order: [
                                 [3, 'desc']
                             ],
-                            pageLength: 15,
+                            pageLength: 10,
                             responsive: true
                         });
                     });

@@ -18,7 +18,8 @@
                     <thead>
                         <tr>
                             <th>File Name</th>
-                            <th>Ticket</th>
+                            <th>Ticket ID</th>
+                            <th>Ticket Subject</th>
                             <th>Customer</th>
                             <th>Uploaded At</th>
                             <th>Actions</th>
@@ -32,13 +33,16 @@
                                         <div class="flex items-center gap-2">
                                             @if(isset($file['is_image']) && $file['is_image'])
                                                 <img src="{{ $file['url'] ?? '#' }}"
-                                                     class="w-10 h-10 object-cover rounded border border-gray-200 cursor-pointer hover:opacity-80 transition-opacity"
+                                                     class="object-cover rounded-sm border border-gray-200"  style="width: 250px; height: 200px;"
                                                      onclick="window.open('{{ $file['url'] ?? '#' }}', '_blank')" loading="lazy">
                                             @else
                                                 <i class="ti ti-file text-lg text-gray-400"></i>
                                             @endif
                                             <span class="font-medium text-gray-500">{{ $file['file_name'] ?? 'N/A' }}</span>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-sm text-gray-500">{{ $file['ticket_id'] ?? 'N/A' }}</span>
                                     </td>
                                     <td>
                                         <span class="text-sm text-gray-500">{{ $file['ticket_subject'] ?? 'N/A' }}</span>
@@ -76,7 +80,7 @@
                     }
                     $('#filesTable').DataTable({
                         order: [[3, 'desc']],
-                        pageLength: 15,
+                        pageLength: 10,
                         responsive: true
                     });
                 });

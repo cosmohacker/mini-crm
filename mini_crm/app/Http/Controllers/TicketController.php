@@ -13,4 +13,8 @@ class TicketController extends Controller
     {
         return view('admin.tickets.details', compact('id'));
     }
+
+    public function updateStatus() {
+        
+    }
 }

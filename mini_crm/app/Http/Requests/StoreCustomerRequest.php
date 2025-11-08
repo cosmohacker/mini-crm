@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Constants\Messages;
+
 class StoreCustomerRequest extends FormRequest
 {
     public function authorize(): bool
@@ -23,7 +25,7 @@ class StoreCustomerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone.regex' => 'The phone number must be in E.164 format (e.g., +1234567890).',
+            'phone.regex' => Messages::CUSTOMER_VALIDATION_PHONE_E164_FORMAT,
         ];
     }
 }

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
+use App\Constants\Messages;
+
 class AuthController extends Controller
 {
     // Login Form
@@ -32,7 +34,7 @@ class AuthController extends Controller
         }
 
         throw ValidationException::withMessages([
-            'email' => ['The provided credentials do not match our records.'],
+            'email' => [Messages::AUTH_CREDENTIALS_DO_NOT_MATCH],
         ]);
     }
 

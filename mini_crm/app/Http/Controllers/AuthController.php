@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    // Login Form
     public function auth()
     {
         if (Auth::check()) {
@@ -17,6 +18,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    // Login Request
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -34,6 +36,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Logout Request
     public function logout(Request $request)
     {
         Auth::logout();

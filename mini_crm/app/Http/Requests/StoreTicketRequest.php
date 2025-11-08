@@ -49,12 +49,10 @@ class StoreTicketRequest extends FormRequest
 
             // Check if customer has already created a ticket today
             $today = Carbon::today();
-            $todayStart = $today->startOfDay();
-            $todayEnd = $today->endOfDay();
 
             // First check if this specific customer has already created a ticket today
             $existingTicketByCustomer = Ticket::where('customer_id', $customerId)
-                ->whereBetween('created_at', [$todayStart, $todayEnd])
+                ->whereDate('created_at', $today)
                 ->exists();
 
             if ($existingTicketByCustomer) {
@@ -70,7 +68,7 @@ class StoreTicketRequest extends FormRequest
                 $existingTicketByPhone = Ticket::whereHas('customer', function ($query) use ($customer) {
                     $query->where('phone', $customer->phone);
                 })
-                    ->whereBetween('created_at', [$todayStart, $todayEnd])
+                    ->whereDate('created_at', $today)
                     ->exists();
 
                 if ($existingTicketByPhone) {
@@ -87,7 +85,7 @@ class StoreTicketRequest extends FormRequest
                 $existingTicketByEmail = Ticket::whereHas('customer', function ($query) use ($customer) {
                     $query->where('email', $customer->email);
                 })
-                    ->whereBetween('created_at', [$todayStart, $todayEnd])
+                    ->whereDate('created_at', $today)
                     ->exists();
 
                 if ($existingTicketByEmail) {

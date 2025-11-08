@@ -26,9 +26,9 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Content -->
-        <div class="space-y-6">
-            <!-- Attachments -->
-            @if ($ticket->media->count() > 0)
+        @if ($ticket->media->count() > 0)
+            <div class="space-y-6">
+                <!-- Attachments -->
                 <div class="card">
                     <div class="card-body">
                         <h2 class="text-lg font-semibold text-gray-500 mb-4">Attachments</h2>
@@ -49,16 +49,20 @@
                                         {{ number_format($media->size / 1024, 2) }} KB
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <a href="{{ route('file.details', $media->id) }}" target="_blank" class="text-blue-600 hover:text-blue-700 text-sm">
+                                        <a href="{{ route('file.details', $media->id) }}" target="_blank"
+                                            class="text-blue-600 hover:text-blue-700 text-sm">
                                             <i class="ti ti-eye mr-1"></i>View
                                         </a>
-                                        <a href="{{ route('file.details', $media->id) }}" download class="text-green-600 hover:text-green-700 text-sm">
+                                        <a href="{{ route('file.details', $media->id) }}" download
+                                            class="text-green-600 hover:text-green-700 text-sm">
                                             <i class="ti ti-download mr-1"></i>Download
                                         </a>
                                     </div>
                                     @if (str_starts_with($media->mime_type ?? '', 'image/'))
                                         <div class="mt-3">
-                                            <img src="{{ route('file.details', $media->id) }}" class="object-contain rounded-sm border border-gray-200"  style="width: 450px; height: 400px;">
+                                            <img src="{{ route('file.details', $media->id) }}"
+                                                class="object-contain rounded-sm border border-gray-200"
+                                                style="width: 450px; height: 400px;">
                                         </div>
                                     @endif
                                 </div>
@@ -66,8 +70,8 @@
                         </div>
                     </div>
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
 
         <div class="lg:col-span-2 space-y-6">
             <!-- Ticket Information -->
@@ -137,31 +141,36 @@
         </div>
 
         @can('edit tickets')
-        <div class="space-y-6">
-            <!-- Update Status -->
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="text-lg font-semibold text-gray-500 mb-4">Update Status</h2>
+            <div class="space-y-6">
+                <!-- Update Status -->
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-lg font-semibold text-gray-500 mb-4">Update Status</h2>
 
-                    <form method="POST" action="{{ route('tickets.updateStatus', $ticket->id) }}">
-                        @csrf
-                        @method('PATCH')
+                        <form method="POST" action="{{ route('tickets.updateStatus', $ticket->id) }}">
+                            @csrf
+                            @method('PATCH')
 
-                        <div class="mb-4">
-                            <label for="status" class="block text-sm mb-2 text-gray-400">Status</label>
-                            <select name="status" id="status"
-                                class="py-2 px-4 block w-full border-gray-200 rounded-sm text-sm focus:border-blue-600 focus:ring-0" required>
-                                <option value="new" {{ $ticket->status == 'new' ? 'selected' : '' }}>New</option>
-                                <option value="in progress" {{ $ticket->status == 'in progress' ? 'selected' : '' }}>In Progress</option>
-                                <option value="processed" {{ $ticket->status == 'processed' ? 'selected' : '' }}>Processed</option>
-                            </select>
-                        </div>
+                            <div class="mb-4">
+                                <label for="status" class="block text-sm mb-2 text-gray-400">Status</label>
+                                <select name="status" id="status"
+                                    class="py-2 px-4 block w-full border-gray-200 rounded-sm text-sm focus:border-blue-600 focus:ring-0"
+                                    required>
+                                    <option value="new" {{ $ticket->status == 'new' ? 'selected' : '' }}>New</option>
+                                    <option value="in progress" {{ $ticket->status == 'in progress' ? 'selected' : '' }}>In
+                                        Progress</option>
+                                    <option value="processed" {{ $ticket->status == 'processed' ? 'selected' : '' }}>Processed
+                                    </option>
+                                </select>
+                            </div>
 
-                        <button type="submit" class="btn py-[10px] px-6 text-base text-white font-medium hover:bg-blue-700 w-full">Update Status</button>
-                    </form>
+                            <button type="submit"
+                                class="btn py-[10px] px-6 text-base text-white font-medium hover:bg-blue-700 w-full">Update
+                                Status</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
         @endcan
     </div>
 @endsection

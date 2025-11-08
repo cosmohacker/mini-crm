@@ -348,14 +348,27 @@
                         errorMessage = xhr.responseJSON.message;
                     } else if (xhr.responseJSON.errors) {
                         const errors = xhr.responseJSON.errors;
-                        Object.keys(errors).forEach(function(field) {
-                            const errorElement = $('#' + field + '-error');
-                            if (errorElement.length) {
-                                errorElement.text(errors[field][0]).removeClass('hidden');
-                                $('#' + field).addClass('border-red-500');
+                        // Handle rate limiting errors (customer_id field)
+                        if (errors.customer_id && errors.customer_id.length > 0) {
+                            errorMessage = errors.customer_id[0];
+                        } else {
+                            // Handle other field errors
+                            Object.keys(errors).forEach(function(field) {
+                                const errorElement = $('#' + field + '-error');
+                                if (errorElement.length) {
+                                    errorElement.text(errors[field][0]).removeClass('hidden');
+                                    $('#' + field).addClass('border-red-500');
+                                } else if (field !== 'customer_id') {
+                                    // If field error element doesn't exist, add to main error message
+                                    if (errorMessage === defaultMessage) {
+                                        errorMessage = errors[field][0];
+                                    }
+                                }
+                            });
+                            if (errorMessage === defaultMessage && Object.keys(errors).length > 0) {
+                                errorMessage = 'Please correct the errors above.';
                             }
-                        });
-                        errorMessage = 'Please correct the errors above.';
+                        }
                     }
                 }
 

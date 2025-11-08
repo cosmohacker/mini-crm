@@ -15,6 +15,9 @@ class Messages
     // Ticket Success Messages
     public const TICKET_STATUS_UPDATED_SUCCESSFULLY = 'Ticket status updated successfully.';
 
+    // Ticket Error Messages
+    public const TICKET_STATUS_UPDATE_FORBIDDEN = 'Only managers can update ticket status.';
+
     // Authentication Messages
     public const AUTH_CREDENTIALS_DO_NOT_MATCH = 'The provided credentials do not match our records.';
 }

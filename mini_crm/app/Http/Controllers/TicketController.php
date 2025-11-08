@@ -33,6 +33,11 @@ class TicketController extends Controller
 
     public function updateStatus($id, UpdateTicketStatusRequest $request)
     {
+        // Only managers can update ticket status
+        if (!auth()->user()->hasRole('manager')) {
+            return redirect()->route('tickets.details', $id)->with('error', Messages::TICKET_STATUS_UPDATE_FORBIDDEN);
+        }
+
         $ticket = $this->ticketService->findById($id);
 
         if (!$ticket) {

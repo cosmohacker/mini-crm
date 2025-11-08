@@ -34,7 +34,16 @@
                                     </td>
                                     <td>{{ $user->email }}</td>
                                     <td>
-                                        <span class="inline-flex items-center py-1 px-3 rounded-3xl font-semibold bg-blue-100 text-blue-600 text-xs">User</span>
+                                        @if ($user->roles->count() > 0)
+                                            @php
+                                                $role = $user->roles->first()->name;
+                                            @endphp
+                                            <span class="inline-flex items-center py-1 px-3 rounded-3xl font-semiboldtext-xs">
+                                                {{ ucfirst($role) }}
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center py-1 px-3 rounded-3xl font-semibold bg-gray-100 text-gray-600 text-xs">No Role</span>
+                                        @endif
                                     </td>
                                     <td>{{ $user->created_at->format('M d, Y') }}</td>
                                 </tr>

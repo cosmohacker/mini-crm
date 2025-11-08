@@ -8,7 +8,11 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::latest()->get();
+        if (!auth()->user()->hasRole('admin')) {
+            return redirect()->route('tickets.index');
+        }
+
+        $users = User::with('roles')->latest()->get();
         return view('admin.users.index', compact('users'));
     }
 }

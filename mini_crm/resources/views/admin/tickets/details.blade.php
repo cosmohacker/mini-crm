@@ -18,6 +18,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="mb-6 p-4 bg-red-100 border text-blue-600 rounded-sm">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Content -->
         <div class="space-y-6">
@@ -130,6 +136,7 @@
 
         </div>
 
+        @can('edit tickets')
         <div class="space-y-6">
             <!-- Update Status -->
             <div class="card">
@@ -155,5 +162,6 @@
                 </div>
             </div>
         </div>
+        @endcan
     </div>
 @endsection

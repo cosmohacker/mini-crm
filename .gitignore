@@ -1,30 +1,33 @@
-/vendor/
-node_modules/
-npm-debug.log
-yarn-error.log
+mini_crm/vendor/
+mini_crm/node_modules/
+mini_crm/npm-debug.log
+mini_crm/yarn-error.log
 
 # Laravel 4 specific
-bootstrap/compiled.php
-app/storage/
+mini_crm/bootstrap/compiled.php
+mini_crm/app/storage/
 
 # Laravel 5 & Lumen specific
-public/storage
-public/hot
+mini_crm/public/storage
+mini_crm/public/hot
 
 # Laravel 5 & Lumen specific with changed public path
-public_html/storage
-public_html/hot
-
-storage/*.key
-.env
-Homestead.yaml
-Homestead.json
+mini_crm/public_html/storage
+mini_crm/public_html/hot
+mini_crm/storage/*.key
+mini_crm/.env
+mini_crm/Homestead.yaml
+mini_crm/Homestead.json
 /.vagrant
-.phpunit.result.cache
+mini_crm/.phpunit.result.cache
+mini_crm/public/build
+mini_crm/storage/pail
+mini_crm/.env.backup
+mini_crm/.env.production
+mini_crm/.phpactor.json
+mini_crm/auth.json
 
-/public/build
-/storage/pail
-.env.backup
-.env.production
-.phpactor.json
-auth.json
+# Docker Data
+
+.docker/data
+

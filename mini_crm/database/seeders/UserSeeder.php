@@ -19,9 +19,9 @@ class UserSeeder extends Seeder
         // Create Admin user
         $admin = User::firstOrCreate(
             [
-                'email' => 'admin@admin.com',
-                'name' => 'Admin',
-                'password' => bcrypt('Admin'),
+                'email'     => 'admin@admin.com',
+                'name'      => 'Admin',
+                'password'  => bcrypt('Admin'),
             ]
         );
 
@@ -33,9 +33,9 @@ class UserSeeder extends Seeder
         // Create Manager user
         $manager = User::firstOrCreate(
             [
-                'email' => 'manager@manager.com',
-                'name' => 'Manager',
-                'password' => bcrypt('Manager'),
+                'email'     => 'manager@manager.com',
+                'name'      => 'Manager',
+                'password'  => bcrypt('Manager'),
             ]
         );
 

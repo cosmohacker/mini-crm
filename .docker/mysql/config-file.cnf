@@ -1,0 +1,15 @@
+[mysqld]
+# variabe for exports
+# https://stackoverflow.com/questions/32737478/how-should-i-tackle-secure-file-priv-in-mysql
+secure_file_priv="/tmp/"
+
+# SQLSTATE[HY000]: General error: 1205 Lock wait timeout exceeded; try restarting transaction
+# https://stackoverflow.com/questions/6000336/how-to-debug-lock-wait-timeout-exceeded-on-mysql
+innodb_lock_wait_timeout=240
+
+connect_timeout=100
+
+wait_timeout=57600
+
+# https://stackoverflow.com/a/64146846/3844186
+lower_case_table_names = 2

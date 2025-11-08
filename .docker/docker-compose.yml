@@ -1,0 +1,49 @@
+services:
+  php_mini_crm:
+    container_name: mini_crm_php
+    build:
+      context: .
+      dockerfile: ./php-fpm/Dockerfile
+    volumes:
+      - ../mini_crm/:/var/www/html
+
+  db_mini_crm:
+    container_name: mini_crm_db
+    platform: linux/x86_64
+    image: mysql
+    build:
+      context: ./mysql
+    entrypoint: docker-entrypoint.sh
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./data/db/mysql:/var/lib/mysql:rw
+      - ./data/tmp:/tmp
+    command: --innodb_use_native_aio=0
+    ports:
+      - '8103:3306'
+    links:
+      - php_mini_crm
+    user: mysql
+
+  web_mini_crm:
+    container_name: mini_crm_web
+    build:
+      context: ./nginx
+    ports:
+      - "8003:80"
+    volumes:
+      - ../mini_crm/:/var/www/html
+    links:
+      - php_mini_crm
+
+  memcached_mini_crm:
+    container_name: mini_crm_memcached
+    image: memcached
+    ports:
+      - "11211:11211"
+    links:
+      - php_mini_crm

@@ -1,0 +1,412 @@
+openapi: 3.0.3
+info:
+  title: Mini-CRM API
+  description: |
+    API documentation for the Mini-CRM system - a feedback collection and processing system.
+    
+    This API allows you to:
+    - Create and manage customers
+    - Submit tickets with optional image attachments
+    - Retrieve ticket statistics
+    
+    All endpoints are currently public and do not require authentication.
+  version: 0.0.1
+  contact:
+    name: Mini-CRM Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:8003/api
+    description: Local development server
+  - url: https://localhost:8003/api
+    description: Production server
+
+tags:
+  - name: Customers
+    description: Customer management endpoints
+  - name: Tickets
+    description: Ticket management endpoints
+
+paths:
+  /customers:
+    get:
+      tags:
+        - Customers
+      summary: Get customers
+      description: |
+        Retrieves a list of customers. Optionally filter by email address.
+      operationId: getCustomers
+      parameters:
+        - name: email
+          in: query
+          description: Filter customers by email address
+          required: false
+          schema:
+            type: string
+            format: email
+          example: john.doe@example.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+              example:
+                - id: 1
+                  name: John Doe
+                  email: john.doe@example.com
+                  phone: "+1234567890"
+                  created_at: "2024-01-15T10:30:00.000000Z"
+                  updated_at: "2024-01-15T10:30:00.000000Z"
+                - id: 2
+                  name: Jane Smith
+                  email: jane.smith@example.com
+                  phone: "+1987654321"
+                  created_at: "2024-01-15T11:00:00.000000Z"
+                  updated_at: "2024-01-15T11:00:00.000000Z"
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+    post:
+      tags:
+        - Customers
+      summary: Create or update customer
+      description: |
+        Creates a new customer or updates an existing one if the email already exists.
+        If a customer with the provided email exists, the name and phone will be updated.
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerInput'
+            example:
+              name: John Doe
+              email: john.doe@example.com
+              phone: "+1234567890"
+      responses:
+        '200':
+          description: Customer updated (existing customer)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '201':
+          description: Customer created (new customer)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /tickets:
+    post:
+      tags:
+        - Tickets
+      summary: Create ticket
+      description: |
+        Creates a new ticket with optional image attachment.
+        
+        **Business Rules:**
+        - A customer can only create one ticket per day
+        - If a customer with the same phone number has already created a ticket today, the request will be rejected
+        - If a customer with the same email address has already created a ticket today, the request will be rejected
+      operationId: createTicket
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - customer_id
+                - subject
+                - text
+              properties:
+                customer_id:
+                  type: integer
+                  description: ID of the customer creating the ticket
+                  example: 1
+                subject:
+                  type: string
+                  maxLength: 255
+                  description: Subject of the ticket
+                  example: Product Inquiry
+                text:
+                  type: string
+                  description: Detailed message/description
+                  example: I would like to know more about your product features.
+                status:
+                  type: string
+                  enum: [new, in progress, processed]
+                  default: new
+                  description: Status of the ticket
+                  example: new
+                image:
+                  type: string
+                  format: binary
+                  description: "Optional image attachment (max 5MB, formats: jpeg, png, jpg, gif)"
+      responses:
+        '201':
+          description: Ticket created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+              example:
+                id: 1
+                customer_id: 1
+                customer:
+                  id: 1
+                  name: John Doe
+                  email: john.doe@example.com
+                  phone: "+1234567890"
+                  created_at: "2024-01-15T10:30:00.000000Z"
+                  updated_at: "2024-01-15T10:30:00.000000Z"
+                subject: Product Inquiry
+                text: I would like to know more about your product features.
+                status: new
+                manager_response_date: null
+                created_at: "2024-01-15T12:00:00.000000Z"
+                updated_at: "2024-01-15T12:00:00.000000Z"
+                media:
+                  - id: 1
+                    file_name: image.jpg
+                    mime_type: image/jpeg
+                    size: 245678
+                    url: "http://localhost:8003/storage/1/image.jpg"
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /tickets/statistics:
+    get:
+      tags:
+        - Tickets
+      summary: Get ticket statistics
+      description: |
+        Retrieves ticket statistics for today, this week, and this month.
+        Statistics include total tickets and breakdown by status (new, in progress, processed).
+      operationId: getTicketStatistics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketStatistics'
+              example:
+                day:
+                  total: 5
+                  new: 3
+                  in_progress: 1
+                  processed: 1
+                week:
+                  total: 25
+                  new: 15
+                  in_progress: 5
+                  processed: 5
+                month:
+                  total: 100
+                  new: 60
+                  in_progress: 20
+                  processed: 20
+
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Customer ID
+          example: 1
+        name:
+          type: string
+          description: Customer name
+          example: John Doe
+        email:
+          type: string
+          format: email
+          description: Customer email address
+          example: john.doe@example.com
+        phone:
+          type: string
+          nullable: true
+          description: Customer phone number in E.164 format
+          example: "+1234567890"
+        created_at:
+          type: string
+          format: date-time
+          description: Customer creation timestamp
+          example: "2024-01-15T10:30:00.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Customer last update timestamp
+          example: "2024-01-15T10:30:00.000000Z"
+
+    CustomerInput:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          description: Customer name
+          example: John Doe
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          description: Customer email address
+          example: john.doe@example.com
+        phone:
+          type: string
+          nullable: true
+          pattern: '^\+[1-9]\d{1,14}$'
+          description: Customer phone number in E.164 format (e.g., +1234567890)
+          example: "+1234567890"
+
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Ticket ID
+          example: 1
+        customer_id:
+          type: integer
+          description: ID of the customer who created the ticket
+          example: 1
+        customer:
+          $ref: '#/components/schemas/Customer'
+          description: Customer information (when loaded)
+        subject:
+          type: string
+          description: Ticket subject
+          example: Product Inquiry
+        text:
+          type: string
+          description: Ticket message/description
+          example: I would like to know more about your product features.
+        status:
+          type: string
+          enum: [new, in progress, processed]
+          description: Current status of the ticket
+          example: new
+        manager_response_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date when manager first responded (set when status changes to 'in progress' or 'processed')
+          example: "2024-01-15T14:30:00.000000Z"
+        created_at:
+          type: string
+          format: date-time
+          description: Ticket creation timestamp
+          example: "2024-01-15T12:00:00.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Ticket last update timestamp
+          example: "2024-01-15T12:00:00.000000Z"
+        media:
+          type: array
+          description: Attached media files
+          items:
+            $ref: '#/components/schemas/Media'
+
+    Media:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Media ID
+          example: 1
+        file_name:
+          type: string
+          description: Original file name
+          example: image.jpg
+        mime_type:
+          type: string
+          description: MIME type of the file
+          example: image/jpeg
+        size:
+          type: integer
+          description: File size in bytes
+          example: 245678
+        url:
+          type: string
+          format: uri
+          description: URL to access the media file
+          example: "http://localhost:8003/storage/1/image.jpg"
+
+    TicketStatistics:
+      type: object
+      description: Ticket statistics grouped by time period
+      properties:
+        day:
+          $ref: '#/components/schemas/StatisticsPeriod'
+          description: Statistics for tickets created today
+        week:
+          $ref: '#/components/schemas/StatisticsPeriod'
+          description: Statistics for tickets created this week (Monday to Sunday)
+        month:
+          $ref: '#/components/schemas/StatisticsPeriod'
+          description: Statistics for tickets created this month
+
+    StatisticsPeriod:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of tickets
+          example: 5
+        new:
+          type: integer
+          description: Number of tickets with status "new"
+          example: 3
+        in_progress:
+          type: integer
+          description: Number of tickets with status "in progress"
+          example: 1
+        processed:
+          type: integer
+          description: Number of tickets with status "processed"
+          example: 1
+
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The given data was invalid.
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email:
+              - The email field is required.
+            phone:
+              - The phone must be in E.164 format.
+            customer_id:
+              - A ticket has already been submitted today for this customer.
+
+  responses:
+    ValidationError:
+      description: Validation error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+

@@ -1,5 +1,20 @@
 <?php
 
+/*
+ * This is a small Mini-CRM application I developed.
+ * Repository: https://github.com/cosmohacker/mini-crm
+ *
+ * This file handles ticket creation validation using a Laravel FormRequest.
+ * It demonstrates typical backend work I do, including:
+ * - Laravel request validation
+ * - Business logic implementation
+ * - Handling edge cases (duplicate tickets by customer ID, phone, or email)
+ * - Clear and maintainable coding style
+ *
+ * The full repository shows the complete project structure,
+ * including models, controllers, routes, Docker setup, and other features.
+ */
+
 namespace App\Http\Requests;
 
 use Carbon\Carbon;
@@ -11,6 +26,11 @@ use App\Models\Customer;
 use App\Models\Ticket;
 use App\Constants\Messages;
 
+/**
+ * Handles validation for creating new tickets.
+ * Ensures that a customer cannot submit more than one ticket per day,
+ * and validates basic ticket data such as subject, text, status, and optional image.
+ */
 class StoreTicketRequest extends FormRequest
 {
     public function authorize(): bool
@@ -58,7 +78,7 @@ class StoreTicketRequest extends FormRequest
             if ($existingTicketByCustomer) {
                 $validator->errors()->add(
                     'customer_id',
-                    Messages::TICKET_VALDITION_ALREADY_SUBMITTED_TODAY
+                    Messages::TICKET_VALIDATION_ALREADY_SUBMITTED_TODAY
                 );
                 return;
             }
@@ -74,7 +94,7 @@ class StoreTicketRequest extends FormRequest
                 if ($existingTicketByPhone) {
                     $validator->errors()->add(
                         'customer_id',
-                        Messages::TICKET_VALDITION_ALREADY_SUBMITTED_TODAY_BY_PHONE
+                        Messages::TICKET_VALIDATION_ALREADY_SUBMITTED_TODAY_BY_PHONE
                     );
                     return;
                 }
@@ -91,7 +111,7 @@ class StoreTicketRequest extends FormRequest
                 if ($existingTicketByEmail) {
                     $validator->errors()->add(
                         'customer_id',
-                        Messages::TICKET_VALDITION_ALREADY_SUBMITTED_TODAY_BY_EMAIL
+                        Messages::TICKET_VALIDATION_ALREADY_SUBMITTED_TODAY_BY_EMAIL
                     );
                     return;
                 }

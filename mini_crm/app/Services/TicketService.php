@@ -46,7 +46,7 @@ class TicketService
         return $ticket->fresh(['customer', 'media']);
     }
 
-    // Get Ticketr Statistics
+    // Get ticket statistics
     public function getStatistics()
     {
         return $this->ticketRepository->getStatistics();
